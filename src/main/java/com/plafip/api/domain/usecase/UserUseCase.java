@@ -17,7 +17,13 @@ public class UserUseCase {
     }
 
     public void signUp(User user){
-        userAdapter.createUser(user);
+        var existentUser = userAdapter.findUser(user);
+        if (existentUser == null){
+            userAdapter.createUser(user);
+        } else {
+            throw new RuntimeException("El usuario existe");
+        }
+
     }
 
     public String signIn(User user) {

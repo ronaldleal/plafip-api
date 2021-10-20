@@ -7,10 +7,11 @@ import com.plafip.api.domain.port.UserAdapter;
 import com.plafip.api.domain.usecase.UserUseCase;
 import com.plafip.api.infra.data.dao.UserDao;
 import com.plafip.api.infra.data.repository.UserRepository;
-import com.plafip.api.infra.security.SpringSecurityService;
+import com.plafip.api.infra.service.PlafipSecurityService;
 import com.plafip.api.infra.service.EncryptServiceImpl;
 import com.plafip.api.infra.service.ModelMapperServiceImpl;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,8 +40,9 @@ public class AppProducers {
     }
 
     @Bean
-    public SecurityService securityService(BCryptPasswordEncoder encoder){
-        return new SpringSecurityService(encoder);
+    public SecurityService plafipSecurityService(@Value("${app.jwt.secret}") String secret,
+                                                 @Value("${app.jwt.expiration}") long expiration){
+        return new PlafipSecurityService(secret, expiration);
     }
 
     @Bean

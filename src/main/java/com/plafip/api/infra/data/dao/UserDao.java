@@ -22,10 +22,6 @@ public class UserDao implements UserAdapter {
         this.modelMapperService = modelMapperService;
     }
 
-    public User doLogin(String email) {
-        return null;
-    }
-
     public User createUser(User user) {
         user.setPassword(encryptService.encode(user.getPassword()));
         var entity = modelMapperService.map(user, UserEntity.class);
@@ -34,11 +30,18 @@ public class UserDao implements UserAdapter {
     }
 
     public User doLogin(User user) {
-        user.setPassword(encryptService.encode(user.getPassword()));
         var entity = modelMapperService.map(user, UserEntity.class);
-        entity = userRepository.findByEmailAndPassword(entity.getEmail(), entity.getPassword());
+        entity = userRepository.findByEmailOrUsername(entity.getEmail(), entity.getUsername());
         return Optional.ofNullable(entity)
+                .filter(r -> encryptService.isMatched(user.getPassword(), r.getPassword()))
                 .map(r -> modelMapperService.map(r, User.class))
+                .orElse(null);
+    }
+
+    public User findUser(User user){
+        var entity = userRepository.findByEmailOrUsername(user.getEmail(), user.getUsername());
+        return Optional.ofNullable(entity)
+                .map(u -> modelMapperService.map(entity, User.class))
                 .orElse(null);
     }
 }

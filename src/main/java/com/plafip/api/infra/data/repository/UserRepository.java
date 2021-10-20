@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface UserRepository extends CrudRepository<UserEntity, UUID> {
 
     UserEntity findByEmail(String email);
-    UserEntity findByEmailAndPassword(String email, String password);
+    UserEntity findByEmailOrUsername(String email, String username);
 }

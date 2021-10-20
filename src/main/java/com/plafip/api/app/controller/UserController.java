@@ -1,5 +1,6 @@
 package com.plafip.api.app.controller;
 
+import com.plafip.api.app.dto.UserAuthDto;
 import com.plafip.api.app.dto.UserSignInDto;
 import com.plafip.api.app.dto.UserSignUpDto;
 import com.plafip.api.domain.model.User;
@@ -28,19 +29,21 @@ public class UserController {
 
     @PreAuthorize("permitAll()")
     @PostMapping("/sign-in")
-    public String doLogin(@RequestBody UserSignInDto user){
+    public UserAuthDto doLogin(@RequestBody UserSignInDto user){
         log.info(user.toString());
         var token = userUseCase.signIn(modelMapperService.map(user, User.class));
         if (Objects.isNull(token)){
             throw new RuntimeException();
         }
-        return token;
+        return UserAuthDto.builder()
+                .email(user.getEmail())
+                .jwt(token)
+                .build();
     }
 
     @PreAuthorize("permitAll()")
     @PostMapping("/sign-up")
     public void doSignUp(@RequestBody UserSignUpDto user){
-        log.info(user.toString());
         userUseCase.signUp(modelMapperService.map(user, User.class));
     }
 

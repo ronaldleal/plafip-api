@@ -14,4 +14,9 @@ public class EncryptServiceImpl implements EncryptService {
     public String encode(String input) {
         return encoder.encode(input);
     }
+
+    @Override
+    public boolean isMatched(String input, String encodedValue) {
+        return encoder.matches(input, encodedValue);
+    }
 }
