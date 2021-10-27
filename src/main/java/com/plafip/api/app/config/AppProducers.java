@@ -1,15 +1,15 @@
 package com.plafip.api.app.config;
 
-import com.plafip.api.domain.port.EncryptService;
-import com.plafip.api.domain.port.ModelMapperService;
-import com.plafip.api.domain.port.SecurityService;
-import com.plafip.api.domain.port.UserAdapter;
+import com.plafip.api.domain.port.*;
+import com.plafip.api.domain.usecase.MovementUseCase;
 import com.plafip.api.domain.usecase.UserUseCase;
+import com.plafip.api.infra.data.dao.MovementDao;
 import com.plafip.api.infra.data.dao.UserDao;
+import com.plafip.api.infra.data.repository.MovementRepository;
 import com.plafip.api.infra.data.repository.UserRepository;
-import com.plafip.api.infra.service.PlafipSecurityService;
 import com.plafip.api.infra.service.EncryptServiceImpl;
 import com.plafip.api.infra.service.ModelMapperServiceImpl;
+import com.plafip.api.infra.service.PlafipSecurityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class AppProducers {
+
 
     @Bean
     public BCryptPasswordEncoder bcryptPasswordEncoder(){
@@ -50,9 +51,21 @@ public class AppProducers {
                                    ModelMapperService modelMapperService){
         return new UserDao(userRepository, encryptService, modelMapperService);
     }
+    @Bean
+    public MovementAdapter movementAdapter(MovementRepository movementRepository,
+                                           ModelMapperService modelMapperService,
+                                           UserRepository userRepository
+                                           ){
+        return new MovementDao(modelMapperService, userRepository,movementRepository);
+    }
 
     @Bean
     public UserUseCase userUseCase(UserAdapter userAdapter, SecurityService securityService){
         return new UserUseCase(userAdapter, securityService);
+    }
+
+    @Bean
+    public MovementUseCase movementUseCase(MovementAdapter movementAdapter){
+        return new MovementUseCase(movementAdapter);
     }
 }

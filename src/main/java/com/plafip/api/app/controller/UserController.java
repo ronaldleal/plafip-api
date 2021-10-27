@@ -35,6 +35,7 @@ public class UserController {
         if (Objects.isNull(token)){
             throw new RuntimeException();
         }
+
         return UserAuthDto.builder()
                 .email(user.getEmail())
                 .jwt(token)
