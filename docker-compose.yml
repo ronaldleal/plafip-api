@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:8.0.27
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'plafip'
+      MYSQL_USER: 'plafip'
+      MYSQL_PASSWORD: '123admin'
+      MYSQL_ROOT_PASSWORD: 'rootroot'
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - plafip
+  plafip-api:
+    build: .
+    #image: plafip-api:latest
+    restart: on-failure
+    ports:
+      - 8080:8080
+    environment: # Pass environment variables to the service
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/plafip?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+      SPRING_DATASOURCE_USERNAME: 'plafip'
+      SPRING_DATASOURCE_PASSWORD: '123admin'
+    depends_on:
+      - db
+    networks:
+      - plafip
+
+# Names our volume
+volumes:
+  db:
+
+networks:
+  plafip:

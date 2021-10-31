@@ -15,13 +15,11 @@ public class MovementUseCase {
         return movementAdapter.createMovement(movement);
     }
 
-    public Movement movementByUser(User user){
-        return null;
-    }
+    public void deleteMovement(Movement movement){
+        movementAdapter.deleteMovement(movement); }
 
-    public void movimientoResumen(){
-
-    }
+    public Movement updateMovement(Movement movement){
+        return movementAdapter.updateMovement(movement); }
 
     public void movimientoBorrar(){
 

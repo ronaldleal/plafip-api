@@ -2,6 +2,7 @@ package com.plafip.api.app.controller;
 
 
 import com.plafip.api.app.dto.MovementDto;
+import com.plafip.api.app.dto.MovementUpdateDto;
 import com.plafip.api.domain.model.Movement;
 import com.plafip.api.domain.model.User;
 import com.plafip.api.domain.port.ModelMapperService;
@@ -25,7 +26,7 @@ public class MovementController {
     }
 
     @PreAuthorize("permitAll()")
-    @GetMapping("/movimiento")
+    @GetMapping
     public User getMovementByUser(@RequestBody User user){
         log.info(user.toString());
 
@@ -40,15 +41,23 @@ public class MovementController {
     }
 
     @PreAuthorize("permitAll()")
-    @GetMapping("/movimiento-resumen")
-    public void getResumen(@RequestBody User user){
-        log.info(user.toString());
-        return ;
+    @GetMapping("/{id}/resume")
+    public void getResumen(@RequestBody Long id){
+
     }
 
     @PreAuthorize("permitAll()")
-    @DeleteMapping("/movimiento")
-    public void deleteMovement(@RequestBody User user){
-        log.info(user.toString());
+    @DeleteMapping
+    public void deleteMovement(@RequestBody MovementDto movementDto){
+        var movement = modelMapperService.map(movementDto,Movement.class);
+        movementUseCase.deleteMovement(movement);
+    }
+
+    @PreAuthorize("permitAll()")
+    @PatchMapping
+    public Movement updateMovement(@RequestBody MovementUpdateDto movementUpdateDto){
+        var movement = modelMapperService.map(movementUpdateDto,Movement.class);
+        movement = movementUseCase.updateMovement(movement);
+        return movement;
     }
 }

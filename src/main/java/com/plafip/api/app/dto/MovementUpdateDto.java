@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.extern.jackson.Jacksonized;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -14,10 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @Jacksonized
-public class MovementDto {
+public class MovementUpdateDto {
     @JsonProperty("id")
     public Long externalId;
-    private Long userId;
     private String tipo;
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate fecha;

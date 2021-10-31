@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class Movement {
     @JsonProperty("id")
     private Long externalId;
-    private String username;
+    private Long userId;
     private String tipo;
     private LocalDate fecha;
     private Double monto;

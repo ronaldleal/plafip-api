@@ -7,32 +7,35 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 @Data
 @Entity(name = "movimiento")
-@Table
+@Table(name = "movement")
 public class MovementEntity {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "id", updatable = false, nullable = false)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "BINARY(16)", updatable = false, nullable = false)
     private UUID id;
+
     @Generated(GenerationTime.INSERT)
     @Column(name = "external_id", columnDefinition = "serial", updatable = false, nullable = false)
     private Long externalId;
-    @Column(name = "username", nullable = false)
-    private String username;
-    @Column(name = "tipo", nullable = false)
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @Column(name = "type", nullable = false)
     private String tipo;
-    @Column(name = "fecha", nullable = false)
+
+    @Column(name = "created", nullable = false)
     private LocalDate fecha;
-    @Column(name = "monto", nullable = false)
+
+    @Column(name = "amount", nullable = false)
     private Double monto;
-    @Column(name = "descripcion", nullable = false)
+
+    @Column(name = "description", nullable = false)
     private String descripcion;
 }
