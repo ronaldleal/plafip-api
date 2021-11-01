@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.util.Lazy;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class MovementEntity {
     @Column(name = "external_id", columnDefinition = "serial", updatable = false, nullable = false)
     private Long externalId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 

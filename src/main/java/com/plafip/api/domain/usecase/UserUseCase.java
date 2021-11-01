@@ -1,6 +1,7 @@
 package com.plafip.api.domain.usecase;
 
 import com.plafip.api.domain.model.User;
+import com.plafip.api.domain.model.UserLogin;
 import com.plafip.api.domain.port.SecurityService;
 import com.plafip.api.domain.port.UserAdapter;
 
@@ -26,10 +27,13 @@ public class UserUseCase {
 
     }
 
-    public String signIn(User user) {
+    public UserLogin signIn(User user) {
         var response = userAdapter.doLogin(user);
         return Optional.ofNullable(response)
-                .map(securityService::generateToken)
+                .map(u -> UserLogin.builder()
+                        .user(u)
+                        .token(securityService.generateToken(u))
+                        .build())
                 .orElse(null);
     }
 }

@@ -14,4 +14,6 @@ public class UserAuthDto {
     @JsonProperty("correo")
     private String email;
     private String jwt;
+    @JsonProperty("id")
+    private Long externalId;
 }

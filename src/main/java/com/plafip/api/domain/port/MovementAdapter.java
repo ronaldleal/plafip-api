@@ -5,8 +5,8 @@ import com.plafip.api.domain.model.Movement;
 import java.util.List;
 
 public interface MovementAdapter {
-    List<Movement> getMovementsByUser(String email);
+    List<Movement> getMovementsByUser(Long userId);
     Movement createMovement(Movement movement);
-    void deleteMovement(Movement movement);
+    void deleteMovement(Long id);
     Movement updateMovement(Movement movement);
 }

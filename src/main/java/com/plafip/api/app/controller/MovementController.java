@@ -3,13 +3,15 @@ package com.plafip.api.app.controller;
 
 import com.plafip.api.app.dto.MovementDto;
 import com.plafip.api.app.dto.MovementUpdateDto;
+import com.plafip.api.domain.model.Balance;
 import com.plafip.api.domain.model.Movement;
-import com.plafip.api.domain.model.User;
 import com.plafip.api.domain.port.ModelMapperService;
 import com.plafip.api.domain.usecase.MovementUseCase;
 import lombok.extern.java.Log;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Log
 @RestController
@@ -26,11 +28,9 @@ public class MovementController {
     }
 
     @PreAuthorize("permitAll()")
-    @GetMapping
-    public User getMovementByUser(@RequestBody User user){
-        log.info(user.toString());
-
-        return null;
+    @GetMapping("/users/{id}")
+    public List<Movement> getMovementByUser(@PathVariable Long id){
+        return movementUseCase.getMovements(id);
     }
 
     @PreAuthorize("permitAll()")
@@ -39,25 +39,24 @@ public class MovementController {
         var movement = modelMapperService.map(movementDto, Movement.class);
         movementUseCase.createMovement(movement);
     }
-
+    
     @PreAuthorize("permitAll()")
-    @GetMapping("/{id}/resume")
-    public void getResumen(@RequestBody Long id){
-
+    @PostMapping("/delete/{id}")
+    public void deleteMovement(@PathVariable Long id){
+        movementUseCase.deleteMovement(id);
     }
 
     @PreAuthorize("permitAll()")
-    @DeleteMapping
-    public void deleteMovement(@RequestBody MovementDto movementDto){
-        var movement = modelMapperService.map(movementDto,Movement.class);
-        movementUseCase.deleteMovement(movement);
-    }
-
-    @PreAuthorize("permitAll()")
-    @PatchMapping
+    @PostMapping("/update")
     public Movement updateMovement(@RequestBody MovementUpdateDto movementUpdateDto){
         var movement = modelMapperService.map(movementUpdateDto,Movement.class);
         movement = movementUseCase.updateMovement(movement);
         return movement;
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/balance/users/{id}")
+    public Balance getBalance(@PathVariable Long id){
+        return movementUseCase.getBalance(id);
     }
 }

@@ -40,6 +40,6 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<MovementEntity> movementEntities;
 }

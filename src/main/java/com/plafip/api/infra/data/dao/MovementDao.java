@@ -8,8 +8,9 @@ import com.plafip.api.infra.data.repository.MovementRepository;
 import com.plafip.api.infra.data.repository.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 public class MovementDao implements MovementAdapter {
 
@@ -26,8 +27,15 @@ public class MovementDao implements MovementAdapter {
     }
 
     @Override
-    public List<Movement> getMovementsByUser(String email) {
-        return null;
+    public List<Movement> getMovementsByUser(Long userId) {
+        var userEntity  = userRepository.findByExternalId(userId);
+        if (Objects.isNull(userEntity)) {
+            return List.of();
+        }
+        var movementsEntities = userEntity.getMovementEntities();
+        return movementsEntities.stream()
+                .map(entity -> modelMapperService.map(entity, Movement.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -40,8 +48,8 @@ public class MovementDao implements MovementAdapter {
     }
 
     @Override
-    public void deleteMovement(Movement movement) {
-        var movementEntity = movementRepository.findByExternalId(movement.getExternalId());
+    public void deleteMovement(Long id) {
+        var movementEntity = movementRepository.findByExternalId(id);
         movementRepository.delete(movementEntity);
     }
 

@@ -31,14 +31,15 @@ public class UserController {
     @PostMapping("/sign-in")
     public UserAuthDto doLogin(@RequestBody UserSignInDto user){
         log.info(user.toString());
-        var token = userUseCase.signIn(modelMapperService.map(user, User.class));
-        if (Objects.isNull(token)){
+        var userLogin = userUseCase.signIn(modelMapperService.map(user, User.class));
+        if (Objects.isNull(userLogin)){
             throw new RuntimeException();
         }
 
         return UserAuthDto.builder()
-                .email(user.getEmail())
-                .jwt(token)
+                .email(userLogin.getUser().getEmail())
+                .jwt(userLogin.getToken())
+                .externalId(userLogin.getUser().getExternalId())
                 .build();
     }
 
